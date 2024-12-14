@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Post List</title>
+  <style>
+    #toc {
+      width: 99%;
+      margin: 5px auto;
+    }
+    .postname {
+      font-size: 10px;
+      background: #fff;
+      margin-left: -10px;
+      padding-left: 20px;
+      list-style-type: none;
+    }
+    .postname li {
+      border-bottom: #ddd 1px dotted;
+      margin-right: 5px;
+      padding: 5px 0;
+    }
+    .postname a {
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Best Sellers:</h1>
+  <div id="toc">
+    <div class="postname" id="recent-posts">
+      <!-- Post list will be populated dynamically -->
+    </div>
+  </div>
+
+  <script>
+    var blogFeed = 'https://newyorkmnetwork.blogspot.com/feeds/posts/default?alt=json-in-script&max-results=9925'; 
+
+    function loadtoc(json) {
+      var posts = json.feed.entry;
+      var output = '<ul>';
+      for (var i = 0; i < posts.length; i++) {
+        var post = posts[i];
+        var title = post.title.$t;
+        var link = post.link.find(function(l) { return l.rel == 'alternate'; }).href;
+        output += '<li><a href="' + link + '">' + title + '</a></li>';
+      }
+      output += '</ul>';
+      document.getElementById('recent-posts').innerHTML = output;
+    }
+
+    var script = document.createElement('script');
+    script.src = blogFeed + '&callback=loadtoc';
+    document.getElementsByTagName('head')[0].appendChild(script);
+  </script>
+</body>
+</html>
